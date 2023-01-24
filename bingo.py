@@ -16,17 +16,22 @@ class Bingo(object):
         print("welcome to bingo. try not to shout. enter coordinates space separated (e.g. 0 1)")
 
     def print_card(self):
-        padding = self.num_rows // 2
+        padding = self.cell_size // 4
         print("  ", end="")
         for i in range(self.num_rows):
             print(f"{i: ^{self.cell_size}}", end="")
         print()
+        fill = lambda s: "*" if s in self.chosen else " "
         for i, row in enumerate(self.rows):
-            print(i, end=" ")
-            for entry in row:
-                fill = "*" if entry in self.chosen else " "
-                print(f"{entry:{fill}^{self.cell_size}}", end="")
-            print("\n" * padding * (i != len(self.rows) - 1))
+            fill_row = [fill(entry) * self.cell_size for entry in row]
+            for _ in range(padding):
+                print(f"  ", end="")
+                print(" ".join(fill_row))
+            print(f"{i} ", end="")
+            print(" ".join([f"{entry:{fill(entry)}^{self.cell_size}}" for entry in row]))
+            for _ in range(padding):
+                print(f"  ", end="")
+                print(" ".join(fill_row))
 
     def bingo(self):
         was_chosen = lambda s: s in self.chosen
